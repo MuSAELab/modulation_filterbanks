@@ -1,4 +1,4 @@
-# Script to compute filterbank features
+# Script to compute quantized spectrogram/modulation spectrogram features
 
 The script covers the following functionalities:
 1) compute spectrogram energies (original and log) using customized filterbanks
