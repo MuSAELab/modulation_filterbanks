@@ -7,4 +7,4 @@ The script covers the following functionalities:
 
 It also provides short demos for each step of the computation, from the original spectrogram to filtered spectrogram, and filtered modulation spectrogram.
 
-!test_fbank.png
+![Alt text](test_fbank.png)
