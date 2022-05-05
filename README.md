@@ -1,4 +1,4 @@
-# Toolbox to compute modulation filterbank features
+# Script to compute filterbank features
 
 The script covers the following functionalities:
 1) compute spectrogram energies (original and log) using customized filterbanks
