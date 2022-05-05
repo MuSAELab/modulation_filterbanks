@@ -7,4 +7,10 @@ The script covers the following functionalities:
 
 It also provides short demos for each step of the computation, from the original spectrogram to filtered spectrogram, and filtered modulation spectrogram.
 
-<img src="./test_fbank.png" width="100" height="100">
+Demos:
+1.Original spectrogram of a modulated signal:
+<img src="./test_spec_og.png" width="300" height="300">
+2.Original modulation spectrogram of the signal:
+<img src="./test_modspec.png" width="300" height="300">
+3.Quantized (20\*20) version of modulation spectrogram (with linear filterbank):
+<img src="./test_fbank.png" width="300" height="300">
