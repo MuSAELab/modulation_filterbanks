@@ -127,12 +127,15 @@ def lifter(cepstra, L=22):
         return cepstra
 
 
-def msr_linear(x, fs,
+def msr_filtered(x, fs,
                win_size1:float=.032, win_shift1:float=.008, 
                win_size2:float=.256, win_shift2:float=.064,
                n_fft_factor1:int=1, n_fft_factor2:int=1,
                n_freq_filters=20, n_mod_filters=20,
-               low_freq=0, min_cf=0, max_cf=20):
+               low_freq=0, high_freq=None, min_cf=0, max_cf=20,
+               ftype1:str='linear',ftype2:str='linear'):
+    
+    assert ftype1 and ftype2 in ['linear','mel'], "unsupported filterbank type"
     
     # convert second to number of FFT points (1st)
     nfft1 = np.ceil(n_fft_factor1*win_size1*fs).astype(int)
@@ -140,7 +143,7 @@ def msr_linear(x, fs,
     # output shape "(num_frame,num_freq_bin)"
     spec_en = fbank(signal=x,samplerate=fs,winlen=win_size1,
                     winstep=win_shift1,nfft=nfft1,winfunc=np.hamming,
-                    lowfreq=low_freq,ftype='linear',nfilt=n_freq_filters)[0]
+                    lowfreq=low_freq,highfreq=high_freq,ftype=ftype1,nfilt=n_freq_filters)[0]
 
     # parameters for modulation energy computation
     mfs = int(1/win_shift1) # sampling frequency (modulation)
@@ -158,27 +161,154 @@ def msr_linear(x, fs,
                                         winstep=win_shift2,
                                         nfft=nfft2,winfunc=np.hamming,
                                         lowfreq=min_cf,highfreq=max_cf,
-                                        ftype='linear',nfilt=n_mod_filters)[0]
+                                        ftype=ftype2,nfilt=n_mod_filters)[0]
     
-    # if feat is zero, we get problems with log
+    # if energy value is zero, we get problems with log
     mod_ens = np.where(mod_ens == 0,np.finfo(float).eps,mod_ens) 
     return mod_ens
 
 
-def msr_linear_log(x, fs,
+def msr_filtered_log(x, fs,
                win_size1:float=.032, win_shift1:float=.008, 
                win_size2:float=.256, win_shift2:float=.064,
                n_fft_factor1:int=1, n_fft_factor2:int=1,
                n_freq_filters=20, n_mod_filters=20,
-               low_freq=0, min_cf=0, max_cf=20):
+               low_freq=0, high_freq=None,min_cf=0, max_cf=20,
+               ftype1:str='linear',ftype2:str='linear'):
     
-    output = msr_linear(x, fs,win_size1, win_shift1, 
+    output = msr_filtered(x, fs,win_size1, win_shift1, 
                         win_size2, win_shift2,
                         n_fft_factor1, n_fft_factor2,
                         n_freq_filters, n_mod_filters,
-                        low_freq, min_cf, max_cf)
+                        low_freq, high_freq, min_cf, max_cf,
+                        ftype1,ftype2)
     
     return 10*np.log10(output)
+
+
+def get_subband_descriptors(psd, freq_range):
+    #Initialize a matrix to store features
+    ft=np.empty((8))*np.nan
+    lo,hi = freq_range[0], freq_range[-1] #Smallest and largest value of freq_range
+    
+    #Centroid
+    ft[0] = np.sum(psd*freq_range)/np.sum(psd)
+    #Entropy
+    ft[1]=-np.sum(psd*np.log(psd))/np.log(hi-lo)
+    #Spread
+    ft[2]=np.sqrt(np.sum(np.square(freq_range-ft[0])*psd)/np.sum(psd))
+    #skewness
+    ft[3]=np.sum(np.power(freq_range-ft[0],3)*psd)/(np.sum(psd)*ft[2]**3)
+    #kurtosis
+    ft[4]=np.sum(np.power(freq_range-ft[0],4)*psd)/(np.sum(psd)*ft[2]**4)
+    #flatness
+    arth_mn=np.mean(psd)/(hi-lo)
+    geo_mn=np.power(np.exp(np.sum(np.log(psd))),(1/(hi-lo)))
+    ft[5]=geo_mn/arth_mn
+    #crest
+    ft[6]=np.max(psd)/(np.sum(psd)/(hi-lo))
+    #flux
+    ft[7]=np.sum(np.abs(np.diff(psd)))
+    
+    return ft
+
+
+def get_msf(x, fs,
+            n_freq_filters=20, n_mod_filters=20,
+            low_freq=0, high_freq=None,
+            min_cf=0, max_cf=20,
+            ftype1:str='linear',ftype2:str='linear'):
+    
+    assert x.ndim == 2, "required input size is 2D"
+    assert x.shape[0] == n_freq_filters and x.shape[1] == n_mod_filters,\
+        "incorrect input shape"
+
+    if high_freq is None:
+        high_freq = fs//2
+        
+    cfs1 = center_filterbank(nfilt=n_freq_filters,
+                             lowfreq=low_freq,
+                             highfreq=high_freq,
+                             ftype=ftype1)
+    
+    cfs2 = center_filterbank(nfilt=n_mod_filters,
+                             lowfreq=min_cf,
+                             highfreq=max_cf,
+                             ftype=ftype2)
+    
+    num_bins = n_freq_filters + n_mod_filters
+    feat = np.empty((num_bins,8))*np.nan
+    for i in range(num_bins):
+        if i < n_freq_filters:
+            feat[i,:] = get_subband_descriptors(x[i,:],cfs2)
+        else:
+            feat[i,:] = get_subband_descriptors(x[:,i-n_mod_filters],cfs1)
+    
+    assert np.nan not in feat, "NaN in returned features"
+    return feat
+
+
+def get_msf_3d(x, fs,
+            n_freq_filters=20, n_mod_filters=20,
+            low_freq=0, high_freq=None,
+            min_cf=0, max_cf=20,
+            ftype1:str='linear',ftype2:str='linear'):
+    
+    assert x.ndim == 3,"required input size is 3D"
+    assert x.shape[1] == n_freq_filters and x.shape[2] == n_mod_filters,\
+        "incorrect input shape"
+        
+    if high_freq is None:
+        high_freq = fs//2
+    
+    num_timeframe = x.shape[0]
+    num_bins = n_freq_filters + n_mod_filters
+    feat_3d = np.empty((num_timeframe,num_bins,8))*np.nan
+    for i in range(num_timeframe):
+        feat_3d[i,::] = get_msf(x[i,::], fs,
+                                n_freq_filters, n_mod_filters,
+                                low_freq, high_freq,
+                                min_cf, max_cf,
+                                ftype1,ftype2)
+        
+    assert np.nan not in feat_3d, "NaN in returned features"
+    
+    return feat_3d
+
+
+def msf_all(x, fs,
+            win_size1:float=.032, win_shift1:float=.008, 
+            win_size2:float=.256, win_shift2:float=.064,
+            n_fft_factor1:int=1, n_fft_factor2:int=1,
+            n_freq_filters=20, n_mod_filters=20,
+            low_freq=0, high_freq=None,
+            min_cf=0, max_cf=20,
+            ftype1:str='linear',ftype2:str='linear'):
+    
+    feat_energy = msr_filtered(x, fs,
+                               win_size1, win_shift1, 
+                               win_size2, win_shift2,
+                               n_fft_factor1, n_fft_factor2,
+                               n_freq_filters, n_mod_filters,
+                               low_freq, high_freq, 
+                               min_cf, max_cf,
+                               ftype1,ftype2)
+    
+    feat_msf = get_msf_3d(feat_energy, fs,
+                          n_freq_filters, n_mod_filters,
+                          low_freq, high_freq,
+                          min_cf, max_cf,
+                          ftype1,ftype2)
+    
+    assert feat_energy.shape[0] == feat_msf.shape[0], "inconsistent time dimension"
+    
+    # flatten both into 2d matrix "num_frame * num_features"
+    feat_energy = feat_energy.reshape((feat_energy.shape[0],-1))
+    feat_msf = feat_msf.reshape((feat_msf.shape[0],-1))
+    
+    feat_all = np.concatenate((10*np.log10(feat_energy),feat_msf),axis=1)
+    
+    return feat_all 
 
 # %%
 
@@ -220,7 +350,7 @@ if __name__ == "__main__":
     cts = center_filterbank(nfilt=20,lowfreq=0,highfreq=20)
 
     # show average log modulation spectrogram (averaged over time)
-    toy_mod = msr_linear_log(x,fs,n_freq_filters=20,n_mod_filters=20)
+    toy_mod = msr_filtered(x,fs,n_freq_filters=20,n_mod_filters=20,ftype1='linear',ftype2='linear')
     plt.figure(figsize=(20,10))
     plt.pcolormesh(np.mean(toy_mod,axis=0).squeeze())
     plt.colorbar()
@@ -229,8 +359,8 @@ if __name__ == "__main__":
     plt.xlabel('Modulation frequency')
     plt.ylabel('Acoustic frequency')
     
+    # calculate modulation spectrogram descriptors
+    toy_feat = get_msf_3d(toy_mod,fs)
     
-    # # Compute modulation spectrogram with STFT
-    # f = strfft_modulation_spectrogram(x, fs, .032*fs, 0.008*fs)
-    # plot_modulation_spectrogram_data(f, c_map='jet')
-    # plt.xlim([0,20])    
+    # calculate all modulation spectrogram related features (log energies+descriptors)
+    toy_feat_all = msf_all(x,fs)  
