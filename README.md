@@ -6,3 +6,5 @@ The script covers the following functionalities:
 3) compute quantized modulation spectrogram features
 
 It also provides short demos for each step of the computation, from the original spectrogram to filtered spectrogram, and filtered modulation spectrogram.
+
+docs/test_fbank.png
