@@ -9,8 +9,8 @@ It also provides short demos for each step of the computation, from the original
 
 Demos:<br />
 1.Original spectrogram of a modulated signal:<br />
-<img src="./test_spec_og.png" width="400" height="300"><br />
+<img src="./docs/test_spec_og.png" width="400" height="300"><br />
 2.Original modulation spectrogram of the signal:<br />
-<img src="./test_modspec.png" width="400" height="300"><br />
+<img src="./docs/test_modspec.png" width="400" height="300"><br />
 3.Quantized (20\*20) version of modulation spectrogram (with linear filterbank):<br />
-<img src="./test_fbank.png" width="400" height="300">
+<img src="./docs/test_fbank.png" width="400" height="300">
