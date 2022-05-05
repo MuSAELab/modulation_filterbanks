@@ -8,7 +8,7 @@ The script covers the following functionalities:
 It also provides short demos for each step of the computation, from the original spectrogram to filtered spectrogram, and filtered modulation spectrogram. <br />
 
 Demos:<br />
-1.Original spectrogram of a modulated signal:<br />
+1.Original spectrogram of a modulated signal (modulated by f_m = 4Hz):<br />
 <img src="./docs/test_spec_og.png" width="400" height="300"><br />
 2.Original modulation spectrogram of the signal:<br />
 <img src="./docs/test_modspec.png" width="400" height="300"><br />
