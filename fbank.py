@@ -62,6 +62,20 @@ def get_filterbanks(nfilt=20,nfft=512,samplerate=16000,lowfreq=0,highfreq=None,f
             fbank[j,i] = (bin[j+2]-i) / (bin[j+2]-bin[j+1])
     return fbank 
 
+def center_filterbank(nfilt,lowfreq,highfreq,ftype='linear'):
+    
+    if ftype == 'linear':
+        lowmel = lowfreq
+        highmel = highfreq
+        
+    elif ftype == 'mel':
+        lowmel = hz2mel(lowfreq)
+        highmel = hz2mel(highfreq)
+        
+    edges = np.linspace(lowmel,highmel,nfilt+2)
+    cts = [np.mean(edges[i-2:i]) for i in range(2,len(edges))]
+    
+    return cts
 
 def fbank(signal,samplerate=16000,winlen=0.032,winstep=0.008,
           nfilt=20,nfft=512,lowfreq=0,highfreq=None,preemph=0.97,
@@ -132,12 +146,12 @@ def msr_linear(x, fs,
     mfs = int(1/win_shift1) # sampling frequency (modulation)
     mod_num_frame = np.ceil((spec_en.shape[0]/mfs-win_size2)/win_shift2+1).astype(int)
     mod_ens = np.empty((mod_num_frame,n_freq_filters,n_mod_filters))*np.nan
-    nfft2 = np.ceil(n_fft_factor2*win_size2*mfs).astype(int)
+    nfft2 = np.ceil(n_fft_factor2*win_size2*fs).astype(int)
     
     # 2nd FFT along frequency axis
     # output shape "(num_timeframe,num_freq_bin,num_mod_bin)"
     for freq_bin_idx in range(n_freq_filters):
-        sig_freq = np.sqrt(spec_en[:,freq_bin_idx])
+        sig_freq = np.abs(spec_en[:,freq_bin_idx])
         mod_ens[:,freq_bin_idx,: ] = fbank(signal=sig_freq,
                                         samplerate=mfs,
                                         winlen=win_size2,
@@ -188,19 +202,33 @@ if __name__ == "__main__":
     noise *= np.exp(-time/5)
     x = carrier + 5*noise
     
-    # show spectrogram
+    # show log-spectrogram
     f, t, Sxx = signal.spectrogram(x, fs)
-    plt.pcolormesh(t, f, Sxx, shading='gouraud')
+    plt.pcolormesh(t, f, 10*np.log10(Sxx))
     plt.ylabel('Frequency [Hz]')
     plt.xlabel('Time [sec]')
     plt.show()
     
-    # show modulation spectrogram
-    time_idx = 0
-    toy_mod = msr_linear(x,fs)
-    plt.pcolormesh(10*np.log10(toy_mod[time_idx,:,:]))
-    plt.colorbar()
+    # visualize mod filterbank
+    filter_mod = get_filterbanks(nfilt=20,nfft=512,samplerate=125,lowfreq=0,highfreq=20)
+    plt.pcolormesh(filter_mod)
     
-    f = strfft_modulation_spectrogram(x, fs, .032*fs, 0.08*fs)
-    plot_modulation_spectrogram_data(f, c_map='jet')
-    plot_spectrogram_data(f['spectrogram_data'], c_map='jet') 
+    # center frequencies of mod filterbank
+    cts = center_filterbank(nfilt=20,lowfreq=0,highfreq=20)
+    print(cts)
+
+    # show average log modulation spectrogram (averaged over time)
+    toy_mod = msr_linear_log(x,fs,n_freq_filters=20,n_mod_filters=20)
+    plt.figure(figsize=(20,10))
+    plt.pcolormesh(np.mean(toy_mod,axis=0).squeeze())
+    plt.colorbar()
+    plt.yticks(np.arange(0,21,1),np.arange(0,8001,400))
+    plt.xticks(np.arange(.5,20.5,1),np.round(cts,2),rotation=-20)
+    plt.xlabel('Modulation frequency')
+    plt.ylabel('Acoustic frequency')
+    
+    
+    # # Compute modulation spectrogram with STFT
+    # f = strfft_modulation_spectrogram(x, fs, .032*fs, 0.008*fs)
+    # plot_modulation_spectrogram_data(f, c_map='jet')
+    # plt.xlim([0,20])    
