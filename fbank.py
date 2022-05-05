@@ -213,16 +213,18 @@ if __name__ == "__main__":
     filter_mod = get_filterbanks(nfilt=20,nfft=512,samplerate=125,lowfreq=0,highfreq=20)
     plt.pcolormesh(filter_mod)
     
+    # center frequencies of freq filterbank
+    freq_cts = center_filterbank(nfilt=20,lowfreq=0,highfreq=8000)
+    
     # center frequencies of mod filterbank
     cts = center_filterbank(nfilt=20,lowfreq=0,highfreq=20)
-    print(cts)
 
     # show average log modulation spectrogram (averaged over time)
     toy_mod = msr_linear_log(x,fs,n_freq_filters=20,n_mod_filters=20)
     plt.figure(figsize=(20,10))
     plt.pcolormesh(np.mean(toy_mod,axis=0).squeeze())
     plt.colorbar()
-    plt.yticks(np.arange(0,21,1),np.arange(0,8001,400))
+    plt.yticks(np.arange(0.5,20.5,1),np.around(freq_cts))
     plt.xticks(np.arange(.5,20.5,1),np.round(cts,2),rotation=-20)
     plt.xlabel('Modulation frequency')
     plt.ylabel('Acoustic frequency')
