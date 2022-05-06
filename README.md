@@ -7,7 +7,7 @@ The script covers the following functionalities:
 
 It also provides short demos for each step of the computation, from the original spectrogram to filtered spectrogram, and filtered modulation spectrogram. <br />
 
-# Demo1:<br />
+# Demo1: High SNR setting<br />
 - Spectrogram of a modulated signal (modulated by f_m = 0.25Hz):<br />
 <img src="./docs/demo1_spec.png" width="400" height="300"><br />
 - Modulation spectrogram of the signal (averaged over time):<br />
