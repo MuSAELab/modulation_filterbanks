@@ -7,10 +7,18 @@ The script covers the following functionalities:
 
 It also provides short demos for each step of the computation, from the original spectrogram to filtered spectrogram, and filtered modulation spectrogram. <br />
 
-# Demos:<br />
-1.Original spectrogram of a modulated signal (modulated by f_m = 0.25Hz):<br />
+# Demo1:<br />
+- Spectrogram of a modulated signal (modulated by f_m = 0.25Hz):<br />
 <img src="./docs/test_spec_og.png" width="400" height="300"><br />
-2.Original modulation spectrogram of the signal:<br />
+- Modulation spectrogram of the signal (averaged over time):<br />
 <img src="./docs/test_modspec.png" width="400" height="300"><br />
-3.Quantized (20\*20) version of modulation spectrogram (with linear filterbank):<br />
-<img src="./docs/test_fbank.png" width="400" height="300">
+- Quantized (20\*20) version of modulation spectrogram (using linear filterbank):<br />
+*Notice the higher energy at f_m < 1Hz
+<img src="./docs/test_fbank.png" width="400" height="300"><br />
+
+# Demo2: High SNR setting<br />
+- Spectrogram of a modulated signal (modulated by f_m = 8Hz):<br />
+<img src="./docs/demo2_spec.png" width="400" height="300"><br />
+- Quantized version of modulation spectrogram (using linear filterbank):<br />
+*Notice the higher energy at f_m = 8Hz
+<img src="./docs/demo2_mod.png" width="400" height="300"><br />
