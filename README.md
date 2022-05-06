@@ -22,3 +22,11 @@ It also provides short demos for each step of the computation, from the original
 - Quantized version of modulation spectrogram (using linear filterbank):<br />
 *Notice the higher energy at f_m = 8Hz<br />
 <img src="./docs/demo2_mod.png" width="400" height="300"><br />
+
+# Related resources
+Part of the script is modified from 'python_speech_features' module and 'modulation spectrogram' module. Links are provided below:
+- https://github.com/jameslyons/python_speech_features
+- https://github.com/MuSAELab/amplitude-modulation-analysis-module
+
+# Related articles using the module
+- Y. Zhu and T. H. Falk, "Fusion of Modulation Spectral and Spectral Features with Symptom Metadata for Improved Speech-Based Covid-19 Detection," ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2022, pp. 8997-9001, doi: 10.1109/ICASSP43922.2022.9746471.
