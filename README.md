@@ -7,6 +7,9 @@ The script covers the following functionalities:
 
 It also provides short demos for each step of the computation, from the original spectrogram to filtered spectrogram, and filtered modulation spectrogram. <br />
 
+# Background
+Spectrograms have been widely used as the time-frequency representation of a speech signal. However, environment noise can overlap in both time and frequency, thus making spectrograms sub-optimal. The modulation spectrogram, in turn, captures the rate-of-change of frequency components thus becomes favored for in-the-wild speech analysis.
+
 # Demos of modulation spectrogram vs spectorgram
 ## Demo1: High SNR setting<br />
 - Spectrogram of a modulated signal (modulated by f_m = 1Hz):<br />
