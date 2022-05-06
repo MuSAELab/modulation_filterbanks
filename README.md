@@ -30,7 +30,7 @@ Quantized modulation spectrogram can be used to characterize subtle hidden chang
 We firstly compute the quantized modulation spectrogram, then extract eight different descriptors from each frequency and modulation frequency bin. Steps are depiected in the following graph.<br />
 <img src="./docs/msf.png" ><br />
 
-# Related articles using the module
+# Related articles
 - Y. Zhu and T. H. Falk, "Fusion of Modulation Spectral and Spectral Features with Symptom Metadata for Improved Speech-Based Covid-19 Detection," ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), 2022, pp. 8997-9001, doi: 10.1109/ICASSP43922.2022.9746471.
 
 # Related resources
