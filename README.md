@@ -12,18 +12,18 @@ Spectrograms have been widely used as the time-frequency representation of a spe
 
 # Demos of modulation spectrogram vs spectorgram
 ## Demo1: High SNR setting<br />
-- Spectrogram of a modulated signal (modulated by f_m = 1Hz):<br />
+- Spectrogram of a modulated signal (modulated by f<sub>m</sub> = 1Hz):<br />
 <img src="./docs/demo1_spec.png" width="400" height="300"><br />
 - Quantized (20\*20) version of modulation spectrogram (using linear filterbank):<br />
-*Notice the higher energy at f_m = 1Hz<br />
+*Notice the higher energy at f<sub>m</sub> = 1Hz<br />
 <img src="./docs/demo1_mod.png" width="400" height="300"><br />
 
 
 ## Demo2: Low SNR setting<br />
-- Spectrogram of a modulated signal (modulated by f_m = 8Hz):<br />
+- Spectrogram of a modulated signal (modulated by f<sub>m</sub> = 8Hz):<br />
 <img src="./docs/demo2_spec.png" width="400" height="300"><br />
 - Quantized version of modulation spectrogram (using linear filterbank):<br />
-*Notice the higher energy at f_m = 8Hz<br />
+*Notice the higher energy at f<sub>m</sub> = 8Hz<br />
 <img src="./docs/demo2_mod.png" width="400" height="300"><br />
 
 ## Demo3: COVID vs Non-COVID<br />
