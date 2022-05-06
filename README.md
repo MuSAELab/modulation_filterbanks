@@ -16,7 +16,7 @@ It also provides short demos for each step of the computation, from the original
 *Notice the higher energy at f_m < 1Hz<br />
 <img src="./docs/test_fbank.png" width="400" height="300"><br />
 
-# Demo2: High SNR setting<br />
+# Demo2: Low SNR setting<br />
 - Spectrogram of a modulated signal (modulated by f_m = 8Hz):<br />
 <img src="./docs/demo2_spec.png" width="400" height="300"><br />
 - Quantized version of modulation spectrogram (using linear filterbank):<br />
