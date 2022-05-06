@@ -10,18 +10,18 @@ It also provides short demos for each step of the computation, from the original
 # Demos of modulation spectrogram vs spectorgram
 ## Demo1: High SNR setting<br />
 - Spectrogram of a modulated signal (modulated by f_m = 1Hz):<br />
-<img src="./docs/demo1_spec.png" width="500" height="400"><br />
+<img src="./docs/demo1_spec.png" width="400" height="400"><br />
 - Quantized (20\*20) version of modulation spectrogram (using linear filterbank):<br />
 *Notice the higher energy at f_m = 1Hz<br />
-<img src="./docs/demo1_mod.png" width="500" height="400"><br />
+<img src="./docs/demo1_mod.png" width="400" height="400"><br />
 
 
 ## Demo2: Low SNR setting<br />
 - Spectrogram of a modulated signal (modulated by f_m = 8Hz):<br />
-<img src="./docs/demo2_spec.png" width="500" height="400"><br />
+<img src="./docs/demo2_spec.png" width="400" height="400"><br />
 - Quantized version of modulation spectrogram (using linear filterbank):<br />
 *Notice the higher energy at f_m = 8Hz<br />
-<img src="./docs/demo2_mod.png" width="500" height="400"><br />
+<img src="./docs/demo2_mod.png" width="400" height="400"><br />
 
 ## Demo3: COVID vs Non-COVID<br />
 Quantized modulation spectrogram can be used to characterize subtle hidden changes to the speech signal caused by COVID. Below are averaged modulation spectrograms for COVID and non-COVID speech (value min-max scaled).
