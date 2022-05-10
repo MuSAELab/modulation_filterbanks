@@ -57,6 +57,7 @@ max_cf:         higher bound of modulation frequency (default 20Hz)
 ftype1:         filterbank type for 1st FFT (default 'linear')
 ftype2:         filterbank type for 2nd FFT (default 'linear')
 ```
+Notice that parameters are set to default as optimal values found for speech processing. For more description, please refer to the related paper (scroll down to this page :))
 
 # Background
 Spectrograms have been widely used as the time-frequency representation of a speech signal. However, environment noise can overlap in both time and frequency, thus making spectrograms sub-optimal. The modulation spectrogram, in turn, captures the rate-of-change of frequency components thus becomes favored for in-the-wild speech analysis.
