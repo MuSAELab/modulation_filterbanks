@@ -15,7 +15,7 @@ Simply run
 
 # Usage
 1.Extract a time sequence of modulation spectrogram energies + features.  <br />
-Output shape `[Num_timeframe, Num_frequency_bins, Num_modulation_bins]`
+Output shape `[Num_timeframe, Num_features]`
 ```
 from modbank import fbank
 
@@ -23,7 +23,8 @@ msf  = fbank.msf_all(x, fs, win_size1:float=.032, win_shift1:float=.008, win_siz
                      n_fft_factor1:int=1, n_fft_factor2:int=1, n_freq_filters=20, n_mod_filters=20,
                      low_freq=0, high_freq=None, min_cf=0, max_cf=20, ftype1:str='linear',ftype2:str='linear')
 ```
-2.Compute just filterbanked modulation spectrogram (without log)
+2.Compute just filterbanked modulation spectrogram (without log) <br />
+Output shape `[Num_timeframe, Num_frequency_bins, Num_modulation_bins]`
 ```
 mod_spec = msr_filtered(x, fs, win_size1:float=.032, win_shift1:float=.008, 
                         win_size2:float=.256, win_shift2:float=.064,
