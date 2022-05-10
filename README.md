@@ -14,7 +14,7 @@ Simply run
 
 
 # Usage
-1.Extract modulation spectrogram energies + features
+1.Extract a time sequence of modulation spectrogram energies + features
 ```
 from modbank import fbank
 
