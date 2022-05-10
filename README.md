@@ -1,4 +1,4 @@
-# Modbank: a filterbank version of modulation spectrogram with high-level descriptors
+# Modbank: a filterbank version of modulation spectrogram with low-level descriptors
 
 The script covers the following functionalities:
 1) compute spectrogram energies (original and log) using customized filterbanks
