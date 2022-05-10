@@ -5,7 +5,7 @@ Spyder Editor
 This is a temporary script file.
 """
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 from script import __version__
 
@@ -17,5 +17,5 @@ setup(
     author='Yi Zhu',
     author_email='Yi.Zhu@inrs.ca',
 
-    py_modules=['script'],
+    packages=find_packages(),
 )

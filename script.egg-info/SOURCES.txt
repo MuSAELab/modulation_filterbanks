@@ -1,6 +1,8 @@
 LICENSE
 README.md
 setup.py
+script/__init__.py
+script/fbank.py
 script.egg-info/PKG-INFO
 script.egg-info/SOURCES.txt
 script.egg-info/dependency_links.txt
