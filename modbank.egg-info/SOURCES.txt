@@ -1,0 +1,9 @@
+LICENSE
+README.md
+setup.py
+modbank/__init__.py
+modbank/fbank.py
+modbank.egg-info/PKG-INFO
+modbank.egg-info/SOURCES.txt
+modbank.egg-info/dependency_links.txt
+modbank.egg-info/top_level.txt

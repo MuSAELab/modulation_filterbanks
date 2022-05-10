@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 from script import __version__
 
 setup(
-    name='script',
+    name='modbank',
     version=__version__,
 
     url='https://github.com/zhu00121/modulation_filterbanks/tree/main',
