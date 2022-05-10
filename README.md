@@ -27,7 +27,7 @@ Spectrograms have been widely used as the time-frequency representation of a spe
 <img src="./docs/demo2_mod.png" width="400" height="300"><br />
 
 ## Demo3: COVID vs Non-COVID<br />
-Quantized modulation spectrogram can be used to characterize subtle hidden changes to the speech signal caused by COVID. Below are averaged modulation spectrograms for COVID and non-COVID speech (value min-max scaled).
+Quantized modulation spectrogram can be used to characterize subtle hidden changes to the speech signal caused by COVID. Below are averaged modulation spectrograms for COVID (a) and non-COVID speech (b) (values min-max scaled).
 <img src="./docs/covid.PNG"><br />
 
 # Feature extraction pipeline
