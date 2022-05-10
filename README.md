@@ -19,7 +19,7 @@ Simply run
 # Background
 Spectrograms have been widely used as the time-frequency representation of a speech signal. However, environment noise can overlap in both time and frequency, thus making spectrograms sub-optimal. The modulation spectrogram, in turn, captures the rate-of-change of frequency components thus becomes favored for in-the-wild speech analysis.
 
-# Demos of modulation spectrogram vs spectorgram
+# Demos of quantized modulation spectrograms
 ## Demo1: High SNR setting<br />
 - Spectrogram of a modulated signal (modulated by f<sub>m</sub> = 1Hz):<br />
 <img src="./docs/demo1_spec.png" width="400" height="300"><br />
