@@ -14,7 +14,49 @@ Simply run
 
 
 # Usage
-`To be filled`
+1.Extract modulation spectrogram energies + features
+```
+from modbank import fbank
+
+msf  = fbank.msf_all(x, fs, win_size1:float=.032, win_shift1:float=.008, win_size2:float=.256, win_shift2:float=.064,
+                     n_fft_factor1:int=1, n_fft_factor2:int=1, n_freq_filters=20, n_mod_filters=20,
+                     low_freq=0, high_freq=None, min_cf=0, max_cf=20, ftype1:str='linear',ftype2:str='linear')
+```
+2.Compute just filterbanked modulation spectrogram (without log)
+```
+mod_spec = msr_filtered(x, fs, win_size1:float=.032, win_shift1:float=.008, 
+                        win_size2:float=.256, win_shift2:float=.064,
+                        n_fft_factor1:int=1, n_fft_factor2:int=1,
+                        n_freq_filters=20, n_mod_filters=20,
+                        low_freq=0, high_freq=None, min_cf=0, max_cf=20,
+                        ftype1:str='linear',ftype2:str='linear')
+```
+for log version, use:
+```
+mod_spec_log = msr_filtered_log(x,fs)
+```
+3.Filterbanks can be obtained alone, for example: (use 'plt.pcolormesh' can help to visualize.)
+```
+filter_mod = get_filterbanks(nfilt=20,nfft=512,samplerate=125,lowfreq=0,highfreq=20)
+```
+
+Some explanation of parameters:
+```
+win_size1:      window size for 1st FFT (default 32ms)
+win_size2:      window size for 2nd FFT (default 256ms)
+win_shift1:     window shift (step) for 1st FFT (default 8ms)
+win_shift2:     window shift (step) for 2nd FFT (default 64ms)
+n_fft_factor1:  multiplication factor to number of 1st FFT points (default 1)
+n_fft_factor2:  multiplication factor to number of 2nd FFT points (default 1)
+n_freq_filters: number of acoustic (conventional) frequency filters (default 20)
+n_mod_filters:  number of modulation frequency filters (default 20)
+low_freq:       lower bound of acoustic frequency (default 0)
+high_freq:      higher bound of acoustic frequency (default None)
+min_cf:         lower bound of modulation frequencyl (default 0)
+max_cf:         higher bound of modulation frequency (default 20Hz)
+ftype1:         filterbank type for 1st FFT (default 'linear')
+ftype2:         filterbank type for 2nd FFT (default 'linear')
+```
 
 # Background
 Spectrograms have been widely used as the time-frequency representation of a speech signal. However, environment noise can overlap in both time and frequency, thus making spectrograms sub-optimal. The modulation spectrogram, in turn, captures the rate-of-change of frequency components thus becomes favored for in-the-wild speech analysis.
