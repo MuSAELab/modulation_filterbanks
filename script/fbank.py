@@ -314,8 +314,6 @@ def msf_all(x, fs,
 
 if __name__ == "__main__":
     from scipy import signal
-    from scipy.fft import fftshift
-    import matplotlib.pyplot as plt
     
     # random seed
     rng = np.random.default_rng()
