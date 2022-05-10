@@ -1,4 +1,4 @@
-# Quantized modulation spectrogram
+# modbank: quantized modulation spectrogram with high-level descriptors
 
 The script covers the following functionalities:
 1) compute spectrogram energies (original and log) using customized filterbanks
