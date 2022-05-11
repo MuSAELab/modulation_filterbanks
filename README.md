@@ -9,7 +9,7 @@ It also provides short demos for each step of the computation, from the original
 
 # Set-up
 Simply run
-`python setup.py` from inside the `modulation_filterbanks` folder to install this package.
+`python setup.py install` from inside the `modulation_filterbanks` folder to install this package.
 
 
 
