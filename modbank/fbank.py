@@ -7,6 +7,8 @@ Created on Sun May  1 21:08:04 2022
 
 import numpy as np
 import matplotlib.pyplot as plt
+import decimal
+import math
 from python_speech_features import sigproc
 
 def hz2mel(hz):
@@ -126,6 +128,19 @@ def lifter(cepstra, L=22):
         # values of L <= 0, do nothing
         return cepstra
 
+def round_half_up(number):
+    return int(decimal.Decimal(number).quantize(decimal.Decimal('1'), rounding=decimal.ROUND_HALF_UP))
+
+def calc_num_frame(sig_len:int,frame_len,frame_shift):
+
+    frame_len = int(round_half_up(frame_len))
+    frame_step = int(round_half_up(frame_shift))
+    if sig_len <= frame_len:
+        num_frame = 1
+    else:
+        num_frame = 1 + int(math.ceil((1.0*sig_len - frame_len) / frame_step))
+    
+    return num_frame
 
 def msr_filtered(x, fs,
                win_size1:float=.032, win_shift1:float=.008, 
@@ -144,10 +159,11 @@ def msr_filtered(x, fs,
     spec_en = fbank(signal=x,samplerate=fs,winlen=win_size1,
                     winstep=win_shift1,nfft=nfft1,winfunc=np.hamming,
                     lowfreq=low_freq,highfreq=high_freq,ftype=ftype1,nfilt=n_freq_filters)[0]
-
+    
+    spec_en = np.where(spec_en == 0,np.finfo(float).eps,spec_en) 
     # parameters for modulation energy computation
     mfs = int(1/win_shift1) # sampling frequency (modulation)
-    mod_num_frame = np.ceil((spec_en.shape[0]/mfs-win_size2)/win_shift2+1).astype(int)
+    mod_num_frame = calc_num_frame(spec_en.shape[0],win_size2*mfs,win_shift2*mfs)
     mod_ens = np.empty((mod_num_frame,n_freq_filters,n_mod_filters))*np.nan
     nfft2 = np.ceil(n_fft_factor2*win_size2*fs).astype(int)
     
@@ -314,6 +330,8 @@ def msf_all(x, fs,
 
 if __name__ == "__main__":
     from scipy import signal
+    from scipy.fft import fftshift
+    import matplotlib.pyplot as plt
     
     # random seed
     rng = np.random.default_rng()
@@ -348,10 +366,9 @@ if __name__ == "__main__":
     cts = center_filterbank(nfilt=20,lowfreq=0,highfreq=20)
 
     # show average log modulation spectrogram (averaged over time)
-    toy_mod = msr_filtered_log(x,fs,n_freq_filters=20,n_mod_filters=20,min_cf=0,max_cf=20,ftype1='linear',ftype2='linear')
+    toy_mod = msr_filtered(x,fs,n_freq_filters=20,n_mod_filters=20,min_cf=0,max_cf=20,ftype1='linear',ftype2='linear')
     plt.figure(figsize=(20,10))
     plt.pcolormesh(np.mean(toy_mod,axis=0).squeeze())
-    # plt.pcolormesh(toy_mod[4,::])
     plt.colorbar()
     plt.yticks(np.arange(0.5,20.5,1),np.around(freq_cts))
     plt.xticks(np.arange(.5,20.5,1),np.round(cts,2),rotation=-20)
